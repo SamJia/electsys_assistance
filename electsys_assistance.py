@@ -175,7 +175,6 @@ def login():
             browser.fill('captcha', captcha)
             browser.find_by_value('登 录').click()
             browser.windows.current.close_others()
-            sleep(10)
     except Exception as e:
         logging.getLogger().info("%s login failed." % user_name)
         logging.getLogger('exception').exception(e)
@@ -258,11 +257,17 @@ def selectTeacher():
     try:
         teacher_list = browser.find_by_name('myradiogroup')
         if not teacher_list[parameter['teacher_num']].checked:
-            teacher_list[parameter['teacher_num']].click()
-            browser.find_by_value('选定此教师').click()
-            if 'message' in browser.url:
-                raise Exception()
-            browser.find_by_value('选课提交').click()
+            lines = browser.find_by_id('LessonTime1_gridMain').find_by_tag('tr')
+            if lines[parameter['teacher_num'] + 1].find_by_tag('td')[-1].text != '人数满':
+                teacher_list[parameter['teacher_num']].click()
+                browser.find_by_value('选定此教师').click()
+                if 'message' in browser.url:
+                    raise Exception()
+                browser.find_by_value('选课提交').click()
+            else:
+                browser.back()
+                logging.getLogger().info("select teacher %d failed." % (parameter['teacher_num'] + 1))
+                return False
         else:
             logging.getLogger().info("lesson %s has been choosed" % parameter['lesson_code'])
             return True
@@ -293,14 +298,16 @@ def main():
                 return
             parameter = queue.get()
             try:
-                selectRound(i == 0)
-                selectLessonType()
-                selectLessonTag()
+                if not (browser.find_by_value(parameter['lesson_code'])):
+                    selectRound(i == 0)
+                    selectLessonType()
+                    selectLessonTag()
                 selectLesson()
                 if not selectTeacher():
                     queue.put(parameter)
                 else:
                     logging.getLogger().info("select lesson %s successfully!!!!!" % parameter['lesson_code'])
+                sleep(1.5)
             except Exception as e:
                 queue.put(parameter)
                 if isinstance(e, NeedRelogin):
