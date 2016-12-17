@@ -326,7 +326,7 @@ if __name__ == '__main__':
     initLogger()
     driver = 'firefox'
     try:
-        browser = Browser('fi1refox')
+        browser = Browser('firefox')
     except:
         try:
             browser = Browser('chrome')
