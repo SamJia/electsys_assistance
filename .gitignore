@@ -136,3 +136,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+*/config.txt
+config.txt
