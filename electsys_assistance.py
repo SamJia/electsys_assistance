@@ -258,12 +258,19 @@ def selectTeacher():
         teacher_list = browser.find_by_name('myradiogroup')
         if not teacher_list[parameter['teacher_num']].checked:
             lines = browser.find_by_id('LessonTime1_gridMain').find_by_tag('tr')
-            if lines[parameter['teacher_num'] + 1].find_by_tag('td')[-1].text != '人数满':
+            print('确定人数')
+            print(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text)
+            print('计划人数')
+            print(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text )
+            if lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text > lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text:
                 teacher_list[parameter['teacher_num']].click()
+                sleep(1)
                 browser.find_by_value('选定此教师').click()
+                print('选定教师')
                 if 'message' in browser.url:
                     raise Exception()
                 browser.find_by_value('选课提交').click()
+                print('选课提交')
             else:
                 browser.back()
                 logging.getLogger().info("select teacher %d failed." % (parameter['teacher_num'] + 1))
