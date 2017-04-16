@@ -259,10 +259,10 @@ def selectTeacher():
         if not teacher_list[parameter['teacher_num']].checked:
             lines = browser.find_by_id('LessonTime1_gridMain').find_by_tag('tr')
             print('确定人数')
-            print(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text)
+            print(int(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text))
             print('计划人数')
-            print(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text )
-            if lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text > lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text:
+            print(int(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text ))
+            if int(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-7].text) > int(lines[parameter['teacher_num'] + 1].find_by_tag('td')[-4].text):
                 teacher_list[parameter['teacher_num']].click()
                 sleep(1)
                 browser.find_by_value('选定此教师').click()
